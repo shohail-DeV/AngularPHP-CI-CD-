@@ -22,7 +22,7 @@ pipeline {
         stage('Angular Build & Test') {
             steps {
                 dir('app') {
-                    sh '''
+                    bat '''
                       npm install
                       npm run build --configuration production
                       npm test -- --watch=false --browsers=ChromeHeadless
@@ -34,7 +34,7 @@ pipeline {
         stage('PHP Syntax Check') {
             steps {
                 dir('api/php') {
-                    sh '''
+                    bat '''
                       php -l connect.php
                     '''
                 }
@@ -64,7 +64,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh '''
+                bat '''
                   docker compose -f $DOCKER_COMPOSE_FILE build
                 '''
             }
@@ -72,7 +72,7 @@ pipeline {
 
         stage('Deploy Containers') {
             steps {
-                sh '''
+                bat '''
                   docker compose -f $DOCKER_COMPOSE_FILE down
                   docker compose -f $DOCKER_COMPOSE_FILE up -d
                 '''

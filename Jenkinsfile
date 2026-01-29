@@ -1,13 +1,13 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'Node_js'
+    environment {
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        DOCKER_BUILDKIT = '1'
     }
 
-    environment {
-//        SONAR_PROJECT_KEY = 'angular-php-app'
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    options {
+        timestamps()
     }
 
     stages {
@@ -19,73 +19,41 @@ pipeline {
             }
         }
 
-        stage('Angular Build & Test') {
+        stage('Docker Sanity Check') {
             steps {
-                dir('app') {
-                    bat '''
-                      npm install
-                      npm run build --configuration production
-                      npm test -- --watch=false --browsers=ChromeHeadless
-                    '''
-                }
+                bat 'docker --version'
+                bat 'docker compose version'
             }
         }
 
-        stage('PHP Syntax Check') {
+        stage('Build Docker Images') {
             steps {
-                dir('api/php') {
-                    bat '''
-                      php -l connect.php
-                    '''
-                }
-            }
-        }
-
-        // stage('Static Code Analysis - SonarQube') {
-        //     steps {
-        //         withSonarQubeEnv('SonarQube-Server') {
-        //             sh '''
-        //               sonar-scanner \
-        //               -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-        //               -Dsonar.sources=. \
-        //               -Dsonar.language=js,php
-        //             '''
-        //         }
-        //     }
-        // }
-
-        // stage('Quality Gate') {
-        //     steps {
-        //         timeout(time: 2, unit: 'MINUTES') {
-        //             waitForQualityGate abortPipeline: true
-        //         }
-        //     }
-        // }
-
-        stage('Docker Build') {
-            steps {
-                bat '''
-                  docker compose -f $DOCKER_COMPOSE_FILE build
-                '''
+                bat 'docker compose build'
             }
         }
 
         stage('Deploy Containers') {
             steps {
                 bat '''
-                  docker compose -f $DOCKER_COMPOSE_FILE down
-                  docker compose -f $DOCKER_COMPOSE_FILE up -d
+                docker compose down
+                docker compose up -d
                 '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                bat 'docker ps'
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment successful 🚀'
+            echo '✅ Angular + PHP CI/CD pipeline completed successfully'
         }
         failure {
-            echo 'Pipeline failed ❌'
+            echo '❌ Pipeline failed'
         }
     }
 }

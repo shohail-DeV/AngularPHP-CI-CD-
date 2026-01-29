@@ -1,8 +1,11 @@
 pipeline {
     agent any
 
-    environment {
+    tools {
         nodejs 'Node_js'
+    }
+
+    environment {
 //        SONAR_PROJECT_KEY = 'angular-php-app'
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }

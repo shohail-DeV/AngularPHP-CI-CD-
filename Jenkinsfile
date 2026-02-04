@@ -53,7 +53,7 @@ pipeline {
             echo '✅ Angular + PHP CI/CD pipeline completed successfully'
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo '❌ Pipeline failed !!'
         }
     }
 }

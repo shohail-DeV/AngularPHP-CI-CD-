@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    tools {
-    git 'Default'
-}
+//     tools {
+//     git 'Default'
+// }
 
 
     environment {

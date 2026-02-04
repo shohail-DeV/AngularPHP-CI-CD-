@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+    git 'Default'
+}
+
+
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         DOCKER_BUILDKIT = '1'

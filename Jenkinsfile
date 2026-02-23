@@ -50,20 +50,35 @@ pipeline {
     }
 }
 
-        stage('Deploy Containers') {
-            steps {
-                bat '''
-                docker compose down
-                docker compose up -d
-                '''
-            }
-        }
+        stage('Deploy to Kubernetes') {
+    steps {
+        bat '''
+        kubectl apply -f k8s/
+        kubectl rollout status deployment/angular
+        kubectl rollout status deployment/php
+        kubectl rollout status deployment/mysql
+        '''
+    }
+}
 
         stage('Verify Deployment') {
-            steps {
-                bat 'docker ps'
-            }
-        }
+    steps {
+        bat '''
+        kubectl get pods -o wide
+        kubectl get svc
+        '''
+    }
+}
+
+        stage('Verify Deployment') {
+    steps {
+        bat '''
+        kubectl get pods -o wide
+        kubectl get svc
+        '''
+    }
+}
+
     }
 
     post {

@@ -19,6 +19,12 @@ pipeline {
             }
         }
 
+        stage('Directories'){
+            steps{
+                bat 'dir'
+            }
+        }
+
         stage('Docker Sanity Check') {
             steps {
                 bat 'docker --version'

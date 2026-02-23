@@ -70,14 +70,7 @@ pipeline {
     }
 }
 
-        stage('Verify Deployment') {
-    steps {
-        bat '''
-        kubectl get pods -o wide
-        kubectl get svc
-        '''
-    }
-}
+     
 
     }
 

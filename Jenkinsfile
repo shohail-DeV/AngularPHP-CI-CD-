@@ -50,6 +50,14 @@ pipeline {
     }
 }
 
+        stage('K8s Debug') {
+    steps {
+        bat 'kubectl config view'
+        bat 'kubectl config current-context'
+        bat 'kubectl get nodes'
+    }
+}
+
         stage('Deploy to Kubernetes') {
     steps {
         bat '''

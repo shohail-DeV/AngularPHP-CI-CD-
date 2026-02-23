@@ -37,13 +37,13 @@ pipeline {
         script {
             docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
 
-                def angularImage = docker.build("shohail009/angular-app:latest", "./angular")
+                def angularImage = docker.build("shohail009/angular-app:latest", "./app")
                 angularImage.push()
 
-                def phpImage = docker.build("shohail009/php-backend:latest", "./php")
+                def phpImage = docker.build("shohail009/php-backend:latest", "./api/php")
                 phpImage.push()
 
-                def mysqlImage = docker.build("shohail009/mysql-db:latest", "./mysql")
+                def mysqlImage = docker.build("shohail009/mysql-db:latest", "./api/db")
                 mysqlImage.push()
             }
         }

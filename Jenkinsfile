@@ -26,11 +26,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
-            steps {
-                bat 'docker compose build'
+        stage('Build & Push Images') {
+    steps {
+        script {
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds') {
+
+                def angularImage = docker.build("shohail009/angular-app:latest", "./angular")
+                angularImage.push()
+
+                def phpImage = docker.build("shohail009/php-backend:latest", "./php")
+                phpImage.push()
+
+                def mysqlImage = docker.build("shohail009/mysql-db:latest", "./mysql")
+                mysqlImage.push()
             }
         }
+    }
+}
 
         stage('Deploy Containers') {
             steps {

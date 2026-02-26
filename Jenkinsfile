@@ -82,16 +82,19 @@ pipeline {
         stage('Post-Deployment Monitoring Check') {
     steps {
         bat '''
-        echo Checking pod health...
-        kubectl get pods --no-headers | findstr /V "Running" && exit /b 1 || echo All pods running
+        echo Checking Angular deployment...
+        kubectl rollout status deployment/angular --timeout=60s || exit /b 1
 
-        echo Checking service endpoint...
-        kubectl get svc
+        echo Checking PHP deployment...
+        kubectl rollout status deployment/php --timeout=60s || exit /b 1
 
-        echo Checking Prometheus target health...
-        curl http://localhost:9090/api/v1/targets | findstr "up"
+        echo Checking MySQL deployment...
+        kubectl rollout status deployment/mysql --timeout=60s || exit /b 1
 
-        echo Monitoring validation completed
+        echo Validating Prometheus...
+        curl http://localhost:9090/-/healthy || exit /b 1
+
+        echo Monitoring validation completed successfully
         '''
     }
 }

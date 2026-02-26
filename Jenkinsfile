@@ -79,6 +79,32 @@ pipeline {
     }
 }
 
+        stage('Post-Deployment Monitoring Check') {
+    steps {
+        bat '''
+        echo Checking pod health...
+        kubectl get pods --no-headers | findstr /V "Running" && exit /b 1 || echo All pods running
+
+        echo Checking service endpoint...
+        kubectl get svc
+
+        echo Checking Prometheus target health...
+        curl http://localhost:9090/api/v1/targets | findstr "up"
+
+        echo Monitoring validation completed
+        '''
+    }
+}
+
+        stage('Validate Prometheus Metrics') {
+    steps {
+        bat '''
+        curl "http://localhost:9090/api/v1/query?query=up" > result.json
+        type result.json
+        '''
+    }
+}
+
      
 
     }

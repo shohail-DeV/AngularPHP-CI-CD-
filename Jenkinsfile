@@ -7,6 +7,7 @@ pipeline {
     }
 
     options {
+        skipDefaultCheckout(true)
         timestamps()
     }
 
@@ -84,10 +85,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Angular + PHP CI/CD pipeline completed successfully'
+            echo ' Angular + PHP CI/CD pipeline execution completed successfully'
         }
         failure {
-            echo '❌ Pipeline failed !!'
+            echo ' Pipeline failed !!'
         }
     }
 }

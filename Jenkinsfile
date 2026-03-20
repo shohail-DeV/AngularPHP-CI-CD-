@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         DOCKER_BUILDKIT = '1'
+        KUBECONFIG = 'C:\\Users\\shohail.parwej\\.kube\\config'
     }
 
     options {

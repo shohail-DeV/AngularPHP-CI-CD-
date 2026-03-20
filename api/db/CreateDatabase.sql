@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS api;
 USE api;
 
 CREATE TABLE courses (
